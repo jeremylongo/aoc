@@ -9,6 +9,7 @@ total_per_guard = {}
 # result = re.sub(r"(?im)^\[2018-(\d+)-(\d+) (\d+):(\d+)\] Guard #(\d+) begins shift", r"set_guard(\5, 1\1\2, \3, \4)", subject)
 # result = re.sub(r"(?im)^\[2018-(\d+)-(\d+) (\d+):(\d+)\] falls asleep", r"fall_sleep(1\1\2, \3, \4)", subject)
 # result = re.sub(r"(?im)^\[2018-(\d+)-(\d+) (\d+):(\d+)\] wakes up", r"wakes_up(1\1\2, \3, \4)", subject)
+# replace ", 0" with ", "
 
 
 def set_guard(id, date, h, m):
