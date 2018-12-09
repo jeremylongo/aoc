@@ -19,17 +19,10 @@ def game(playercount, rounds, debug=False):
             marble.rotate(-1)
             marble.append(current_marble)
         else:
-            old_score = players[current_player - 1]
             players[current_player - 1] += current_marble
             marble.rotate(7)
-            score2 = marble.pop()
+            players[current_player - 1] += marble.pop()
             marble.rotate(-1)
-            players[current_player - 1] += score2
-            # if debug:
-            # print("score : %s => %s (%s + %s)" % (old_score, players[current_player - 1], current_marble, score2))
-
-        # if i % 10000 == 0:
-        #     print("round %s" % i)
         if debug:
             print('[%s] ' % current_player + ' '.join([("(%s)" % m) if m == current_marble else ("%s" % m) for m in marble]))
         current_marble += 1
