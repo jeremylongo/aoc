@@ -9,63 +9,6 @@ def get_distance(c1, c2):
     return abs(c1[0]-c2[0]) + abs(c1[1]-c2[1])
 
 
-def get_best_candidate(candidates, c):
-    best = 10000000000
-    best_candidate = None
-    has_dup = False
-    for candidate, coords in candidates.items():
-        d = get_distance(coords, c)
-        if d < best:
-            best = d
-            best_candidate = candidate
-            has_dup = False
-        elif d == best:
-            has_dup = True
-    if has_dup:
-        return '.'
-    else:
-        return best_candidate
-
-
-def get_infinites(grid):
-    global x1, y1, x2, y2
-    result = set()
-    for y in range(y1, y2+1):
-        result.add(grid[x1, y])
-        result.add(grid[x2, y])
-    for x in range(x1, x2+1):
-        result.add(grid[x, y1])
-        result.add(grid[x, y2])
-    return result
-
-
-def build_grid_bourrin(candidates):
-    global x1, y1, x2, y2, scores
-
-    grid = {}
-
-    for coord in product(range(x1, x2+1), range(y1, y2+1)):
-        best_candidate = get_best_candidate(candidates, coord)
-        grid[coord[0], coord[1]] = best_candidate
-        if not best_candidate in scores:
-            scores[best_candidate] = 1
-        else:
-            scores[best_candidate] += 1
-
-    return grid
-
-
-def get_largest_area(grid, scores):
-    infinites = get_infinites(grid)
-    best_candidate = None
-    best_score = 0
-    for candidate, score in scores.items():
-        if candidate not in infinites and score > best_score:
-            best_score = score
-            best_candidate = candidate
-    return best_candidate, best_score
-
-
 def init_env(data):
     global x1, y1, x2, y2, scores, candidates
     x1 = 1000000
