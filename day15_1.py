@@ -27,10 +27,10 @@ class People(object):
         # build list of available neighbours
         self.neighbours = []
         checks = (
-            (self.y, self.x - 1),
             (self.y - 1, self.x),
-            (self.y + 1, self.x),
+            (self.y, self.x - 1),
             (self.y, self.x + 1),
+            (self.y + 1, self.x),
         )
         foe_char = self.enemy_symbol
         for check in checks:
@@ -57,16 +57,6 @@ class People(object):
                 x = item[1]
                 step = w[y][x] + 1
 
-                c = (y-1, x)
-                if y > 0 and w[y-1][x] == '.' and not c in r:
-                    q.append(c)
-                    r[c] = c
-                    w[y-1][x] = step
-                c = (y+1, x)
-                if y < maxy and w[y+1][x] == '.' and not c in r:
-                    q.append(c)
-                    r[c] = c
-                    w[y+1][x] = step
                 c = (y, x-1)
                 if x > 0 and w[y][x-1] == '.' and not c in r:
                     q.append(c)
@@ -77,16 +67,26 @@ class People(object):
                     q.append(c)
                     r[c] = c
                     w[y][x+1] = step
+                c = (y-1, x)
+                if y > 0 and w[y-1][x] == '.' and not c in r:
+                    q.append(c)
+                    r[c] = c
+                    w[y-1][x] = step
+                c = (y+1, x)
+                if y < maxy and w[y+1][x] == '.' and not c in r:
+                    q.append(c)
+                    r[c] = c
+                    w[y+1][x] = step
         # for row in w:
         #     print(''.join([chr(ord('0')+c) if isinstance(c, int) else c for c in row]))
         return w
 
     def is_reachable(self, world, from_coord):
         checks = (
-            (self.y, self.x - 1),
             (self.y - 1, self.x),
-            (self.y + 1, self.x),
+            (self.y, self.x - 1),
             (self.y, self.x + 1),
+            (self.y + 1, self.x),
         )
 
         best = None
@@ -392,39 +392,6 @@ data = """#########
 """
 
 data = """################################
-######......###...##..##########
-######....#G###G..##.G##########
-#####...G##.##.........#########
-##....##..#.##...........#######
-#....#G.......##.........G.#####
-##..##GG....G.................##
-##.......G............#.......##
-###.....G.....G#......E.......##
-##......##....................##
-#.....####......G.....#...######
-#.#########.G....G....#E.#######
-###########...#####......#######
-###########..#######..E.......##
-###########.#########......#.###
-########..#.#########.........##
-#######G....#########........###
-##.##.#.....#########...EE#..#.#
-#...GG......#########.#...##..E#
-##...#.......#######..#...#....#
-###.##........#####......##...##
-###.........................#..#
-####.............##........###.#
-####............##.........#####
-####..##....###.#...#.....######
-########....###..............###
-########..G...##.###...E...E.###
-#########...G.##.###.E....E.####
-#########...#.#######.......####
-#############..########...######
-##############.########.########
-################################"""
-
-data = """################################
 #########################.G.####
 #########################....###
 ##################.G.........###
@@ -455,12 +422,12 @@ data = """################################
 ###...#######.....###E.####....#
 ####..#######.##.##########...##
 ####..######################.###
-################################
-"""
+################################"""
+
 
 world = World(data)
 world.draw()
-r = 1
+r = 0
 outcome = 0
 while world.can_turn():
     print("after %s round" % r)
@@ -468,8 +435,9 @@ while world.can_turn():
     print('health after : ' + ', '.join(["%s" % world.peoples[p].health for p in sorted(world.peoples.keys())]))
     # for k in :
     #     print(world.peoples[k].health)
-    outcome = (r - 1) * sum([p.health for k, p in world.peoples.items()])
     r += 1
+health = sum([p.health for k, p in world.peoples.items()])
+r -= 1
 
-print(outcome)
+print('turns %s, health %s, total %s' % (r, health, r * health))
 print(', '.join(["%s" % world.peoples[p].health for p in sorted(world.peoples.keys())]))
